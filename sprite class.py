@@ -169,8 +169,6 @@ while True:
 
         game_active = collision_sprite()
 
-
-
     else:
         screen.fill((94, 129, 162))
         screen.blit(player_stand, player_stand_rectangle)
