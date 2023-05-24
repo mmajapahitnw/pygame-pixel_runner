@@ -69,7 +69,9 @@ class Obstacles(pygame.sprite.Sprite):
         self.image = self.frames[int(self.anim_index)]
 
     def destroy(self):
+        global score
         if self.rect.right <= 0:
+            score += 1
             self.kill()     # destroy said sprite
 
     def update(self):
@@ -85,14 +87,11 @@ def collision_sprite():
     else:
         return True
 
-def display_score():
+def display_score(score):
 
-    current_time = int(pygame.time.get_ticks()/1000) - start_time
-    score_surface = text_font.render(f'Score: {current_time}', False, (64, 64, 64))
+    score_surface = text_font.render(f'Score: {score}', False, (64, 64, 64))
     score_rectangle = score_surface.get_rect(center=(400, 50))
     screen.blit(score_surface, score_rectangle)
-
-    return current_time
 
 pygame.init()       # starts pygame
 
@@ -124,7 +123,6 @@ text_font = pygame.font.Font('font/Pixeltype.ttf', 50)  # (font type, font size)
 
 player_stand = pygame.image.load('graphics/player/player_stand.png').convert_alpha()
 player_stand = pygame.transform.rotozoom(player_stand, 0, 2)
-# player_stand = pygame.transform.scale2x(player_stand)
 player_stand_rectangle = player_stand.get_rect(center=(400, 200))
 
 game_name = text_font.render('Pixel Runner', False, (111, 196, 169))
@@ -155,16 +153,13 @@ while True:
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
-                # snail_rectangle.left = 800
-                start_time = int(pygame.time.get_ticks()/1000)
+                score = 0
 
     if game_active:
-        score = display_score()
-
         screen.blit(sky_surface, (0, 0))   # to put another surface on this surface (x, y)
         screen.blit(ground_surface, (0, 300))
 
-        display_score()
+        display_score(score)
 
         player.draw(screen)     # display the sprite
         player.update()     # update the sprite
@@ -190,7 +185,6 @@ while True:
             screen.blit(game_message, game_message_rectangle)
         else:
             screen.blit(score_surface, score_rectangle)
-
 
     pygame.display.update()
     clock.tick(60)      # to ensure that the while loop run at 60 times per second max
